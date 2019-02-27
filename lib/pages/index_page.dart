@@ -69,7 +69,7 @@ class _IndexPageState extends State<IndexPage> {
         body: _currentPage,
         bottomNavigationBar: BottomNavigationBar(
           items: navigationBarItems,
-          // type: BottomNavigationBarType.fixed, // 0~3默认采用fixed模式, 4个采用shifting模式
+          type: BottomNavigationBarType.fixed, // 0~3默认采用fixed模式, 4个采用shifting模式
           currentIndex: _currentIndex,
           onTap: handleOnTap,
         ));
@@ -80,5 +80,8 @@ class _IndexPageState extends State<IndexPage> {
       _currentIndex = index;
       _currentPage = tabBodies[index];
     });
+  }
+  void handleOnPress() {
+    print('button press');
   }
 }

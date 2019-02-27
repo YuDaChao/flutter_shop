@@ -5,7 +5,13 @@ class CategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('category page'),
+        child: RaisedButton(
+          padding: EdgeInsets.all(5.0),
+          color: Colors.white,
+          child:
+              Text('搜索', style: TextStyle(color: Colors.pink, fontSize: 16.0)),
+          onPressed: null,
+        ),
       ),
     );
   }
