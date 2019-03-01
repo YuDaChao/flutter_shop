@@ -21,11 +21,11 @@ class _SwiperState extends State<SwiperView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _swiperWidget(widget.slides),
+      body: _swiperWidget(),
     );
   }
 
-  Widget _swiperWidget(slides) {
+  Widget _swiperWidget() {
     return Container(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: MediaQuery.of(context).size.width,
@@ -33,7 +33,7 @@ class _SwiperState extends State<SwiperView> {
       child: Swiper(
         itemCount: 3,
         itemBuilder: (BuildContext context, int index) {
-          String image = slides.isEmpty ? '' : slides[index]['image'];
+          String image = widget.slides.isEmpty ? '' : widget.slides[index]['image'];
           return (image == '' ? Container() : Image.network('$image', fit: BoxFit.fill,));
         },
         pagination: SwiperPagination(

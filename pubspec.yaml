@@ -17,6 +17,9 @@ dependencies:
     sdk: flutter
   flutter_swiper: ^1.1.1
   dio: ^2.0.9
+  flutter_staggered_grid_view: ^0.2.7
+  flutter_spinkit: "^3.1.0"
+  cached_network_image: ^0.6.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,9 +42,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+   - assets/images/fire.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
