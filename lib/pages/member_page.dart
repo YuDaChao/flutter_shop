@@ -10,7 +10,7 @@ class MemberPage extends StatelessWidget {
             Stack(
               children: <Widget>[
                 Container(
-                  height: 300.0,
+                  height: 200.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       fit: BoxFit.fill,

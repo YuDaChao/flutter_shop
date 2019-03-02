@@ -38,7 +38,7 @@ class _SwiperState extends State<SwiperView> {
         },
         pagination: SwiperPagination(
           alignment: Alignment.bottomCenter,
-          margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 25),
           builder: DotSwiperPaginationBuilder(
             color: Colors.black45,
             activeColor: Colors.white
@@ -49,6 +49,14 @@ class _SwiperState extends State<SwiperView> {
         // viewportFraction: 0.8,
         // scale: 0.9,
       ),
+      // decoration: BoxDecoration(
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.white24,
+      //       spreadRadius: 4.0, // 扩散程度
+      //     )
+      //   ]
+      // ),
     );
   }
 }
