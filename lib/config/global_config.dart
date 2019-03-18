@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GlobalConfig {
-  static EdgeInsets margin = EdgeInsets.fromLTRB(8.0, 0, 8.0, 0);
+  static EdgeInsets margin = EdgeInsets.fromLTRB(8.0, 0, 8.0, 8.0);
   static EdgeInsets marginBottom = EdgeInsets.only(bottom: 8.0);
   static BorderRadius borderRadius = BorderRadius.all(Radius.circular(8.0));
   static BorderRadius borderBottomRadius = BorderRadius.only(

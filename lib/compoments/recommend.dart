@@ -2,110 +2,103 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../config/global_config.dart';
+import 'title.dart';
 
 class Recommend extends StatelessWidget {
-  final List list;
+  final List recommendList;
 
-  Recommend({Key key, this.list}) : super(key: key);
+  Recommend({Key key, this.recommendList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int index = 0;
     return Container(
       child: Column(
         children: <Widget>[
-          _recommendTitle(),
-          Container(
-            padding: EdgeInsets.only(bottom: 4.0),
-            margin: GlobalConfig.margin,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  child: Row(
-                    children: list.map<Widget>((m) {
-                      index = index + 1;
-                      return _recommendItem(m, index);
-                  }).toList(),
-                ))
-              ],
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: GlobalConfig.borderBottomRadius
-            ),
+          TitleWidget(
+            title: '为您推荐',
+            assetImage: 'assets/images/recommend.png'
           ),
+          _recommendList(),
         ]
       ),
     );
   }
 
 
-  Widget _recommendTitle() {
+  Widget _recommendItem(int index) {
+    double marginRight = index == recommendList.length - 1 ? 0 : 8.0;
     return Container(
-      height: 21.0,
-      margin: EdgeInsets.fromLTRB(8.0, 14.0, 8.0, 14.0),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            width: 365.0,
-            height: 1.0,
-            margin: EdgeInsets.only(top: 10.0),
-            color: Color.fromRGBO(203, 203, 203, 1),
+      height: 350,
+      width: 250,
+      margin: EdgeInsets.only(right: marginRight),
+      child: InkWell(
+        onTap: () {},
+        borderRadius: GlobalConfig.borderRadius,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: GlobalConfig.borderRadius,),
+          child: Column(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: GlobalConfig.borderTopRadius,
+                child: CachedNetworkImage(imageUrl: recommendList[index]['image']),
+              ),
+              Container(
+                width: 250,
+                margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Text(
+                  '${recommendList[index]["goodsName"]}',
+                  textAlign: TextAlign.left,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black
+                  ),
+                ),
+              ),
+              Container(
+                width: 250,
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      '¥${recommendList[index]["price"]}',
+                      style: TextStyle(fontSize: 20.0, color: Colors.black),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 6.0),
+                      child: Text('¥${recommendList[index]["mallPrice"]}',
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.black38,
+                              decoration: TextDecoration.lineThrough)),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
-          Positioned(
-            left: 140.0,
-            child: Container(
-              color: Color.fromRGBO(245, 245, 245, 1.0),
-              padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-              child: Text('为您推荐', style:TextStyle(fontSize: 14.0, color:Color.fromRGBO(132, 134, 137, 1))),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
 
-  Widget _recommendItem(Map item, int index) {
-    Widget w = index % 2 == 0
-        ? Expanded(
-            child: Column(
-              children: <Widget>[
-                CachedNetworkImage(imageUrl: item['image']),
-                Text(
-                  '¥${item["price"]}',
-                  style: TextStyle(fontSize: 14.0),
-                ),
-                Text('¥${item["mallPrice"]}',
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black38,
-                        decoration: TextDecoration.lineThrough))
-              ],
-            ),
-          )
-        : Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border(
-                      left: BorderSide(color: Colors.grey[100]),
-                      right: BorderSide(color: Colors.grey[100]))),
-              child: Column(
-                children: <Widget>[
-                  CachedNetworkImage(imageUrl: item['image']),
-                  Text(
-                    '¥${item["price"]}',
-                    style: TextStyle(fontSize: 14.0),
-                  ),
-                  Text('¥${item["mallPrice"]}',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.black38,
-                          decoration: TextDecoration.lineThrough))
-                ],
-              ),
-            ),
-          );
-    return w;
+  Widget _recommendList() {
+    return Container(
+      height: 350,
+      margin: GlobalConfig.margin,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: recommendList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _recommendItem(index);
+        },
+      ),
+    );
   }
 
 }

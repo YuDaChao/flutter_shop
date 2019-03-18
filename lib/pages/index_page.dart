@@ -51,22 +51,23 @@ class _IndexPageState extends State<IndexPage> {
         ))
   ];
 
-  final List tabBodies = [HomePage(), CategoryPage(), CartPage(), MemberPage()];
+  final List<Widget> tabBodies = [HomePage(), CategoryPage(), CartPage(), MemberPage()];
 
   int _currentIndex = 0;
-  var _currentPage;
 
   @override
   void initState() {
     super.initState();
-    _currentPage = tabBodies[_currentIndex];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color.fromRGBO(244, 245, 245, 1.0),
-        body: _currentPage,
+        body: IndexedStack(
+          index: _currentIndex,
+          children: tabBodies,
+        ),
         bottomNavigationBar: BottomNavigationBar(
           items: navigationBarItems,
           type: BottomNavigationBarType.fixed, // 0~3默认采用fixed模式, 4个采用shifting模式
@@ -78,7 +79,6 @@ class _IndexPageState extends State<IndexPage> {
   void handleOnTap(int index) {
     setState(() {
       _currentIndex = index;
-      _currentPage = tabBodies[index];
     });
   }
   void handleOnPress() {

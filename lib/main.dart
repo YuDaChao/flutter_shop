@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: '百姓生活',
       theme: ThemeData(
         primaryColor: Colors.pink,
-        scaffoldBackgroundColor: Color.fromRGBO(245, 245, 245, 1.0),    //设置页面背景颜色
+        scaffoldBackgroundColor: Color.fromRGBO(239, 239, 239, 1.0),    //设置页面背景颜色
         primaryIconTheme: IconThemeData(color: Colors.pink)
       ),
       home: IndexPage(),
