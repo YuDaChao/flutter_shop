@@ -19,7 +19,9 @@ class ShopInfo extends StatelessWidget {
         borderRadius: GlobalConfig.borderRadius,
         child: ClipRRect( // 给图片添加圆角
           borderRadius: GlobalConfig.borderRadius,
-          child: CachedNetworkImage(imageUrl: leaderImage,),
+          child: leaderImage != null
+              ? CachedNetworkImage(imageUrl: leaderImage,)
+              : Container(),
         ),
       ),
     );

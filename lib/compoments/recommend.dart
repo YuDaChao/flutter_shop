@@ -67,7 +67,7 @@ class Recommend extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       '¥${recommendList[index]["price"]}',
-                      style: TextStyle(fontSize: 20.0, color: Colors.black),
+                      style: TextStyle(fontSize: 18.0, color: Colors.pink),
                     ),
                     Container(
                       margin: EdgeInsets.only(left: 6.0),

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'dart:convert';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
+import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import '../service/api.dart';
-import '../config/global_config.dart'; // 全局配置
 import '../compoments/search.dart';    // 搜索
 import '../compoments/nav.dart';       // 分类导航
 import '../compoments/swiper.dart';    // 轮播
@@ -15,6 +14,7 @@ import '../compoments/recommend.dart'; // 推荐
 import '../compoments/title.dart';
 import '../compoments/floor.dart';
 import '../compoments/floor_title.dart';
+import '../compoments/hot_goods.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -33,10 +33,18 @@ class _HomePageState extends State<HomePage>
   List categories = []; // 分类
   Map advertesPicture = {};
   Map shopInfo = {};
-  List bottomList = []; // 底部列表
+  List hotGoodsList = []; // 底部列表
 
-  bool isPerformingRequest = false;
-  ScrollController _scrollController = new ScrollController();
+  int currentPage = 1;
+
+  GlobalKey<EasyRefreshState> _easyRefreshKey =
+  new GlobalKey<EasyRefreshState>();
+
+  GlobalKey<RefreshHeaderState> _headerKey =
+  new GlobalKey<RefreshHeaderState>();
+
+  GlobalKey<RefreshFooterState> _footerKey =
+  new GlobalKey<RefreshFooterState>();
 
   @override
   bool get wantKeepAlive => true;
@@ -44,45 +52,11 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    print('initState。。。');
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        print('正在获取数据...');
-        this.setState(() {
-          isPerformingRequest = true;
-        });
-        Timer(Duration(seconds: 5), () {
-          print('5s后执行');
-          this.setState(() {
-            isPerformingRequest = false;
-          });
-        });
-      }
-    });
 
-    getHomePageContent({'lon': 115.02932, 'lat': 35.76189}).then((jsonData) {
-      // JsonCodec codec = new JsonCodec();
-      // Map<String, dynamic> jsonData = codec.decode(res.toString());
-      if (jsonData['code'] == '0') {
-        this.setState(() {
-          homePageContent = jsonData['data'];
-          slides = homePageContent['slides'];
-          List categoryList = homePageContent['category'];
-          int end = categoryList.isEmpty ? 0 : categoryList.length - 1;
-          categories = categoryList.sublist(0, end);
-          advertesPicture = homePageContent['advertesPicture'];
-          shopInfo = homePageContent['shopInfo'];
-        });
-      }
-    });
+    getHomeContent({'lon': 115.02932, 'lat': 35.76189});
 
-    // getHomeBottomList({'lon': 115.02932, 'lat': 35.76189})
-    // .then((resp) {
-    //   if (resp.code == '0') {
-    //     bottomList = resp.data;
-    //   }
-    // });
+    getHotGoodsList(currentPage);
+
   }
 
   @override
@@ -101,7 +75,45 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     super.dispose();
-    _scrollController.dispose();
+  }
+
+  void loadMoreHotGoods(currentPage) async{
+    String resp = await getHomeBottomList({'page': currentPage});
+    Map<String, dynamic> jsonData = json.decode(resp.toString());
+    if (jsonData['code'] == '0') {
+      this.setState(() {
+        hotGoodsList.addAll(jsonData['data']);
+      });
+    }
+  }
+
+  void getHomeContent(params) {
+    getHomePageContent(params).then((resp) {
+      // JsonCodec codec = new JsonCodec();
+      Map<String, dynamic> jsonData = json.decode(resp.toString());
+      if (jsonData['code'] == '0') {
+        this.setState(() {
+          homePageContent = jsonData['data'];
+          slides = homePageContent['slides'];
+          List categoryList = homePageContent['category'];
+          int end = categoryList.isEmpty ? 0 : categoryList.length - 1;
+          categories = categoryList.sublist(0, end);
+          advertesPicture = homePageContent['advertesPicture'];
+          shopInfo = homePageContent['shopInfo'];
+        });
+      }
+    });
+  }
+
+  void getHotGoodsList(currentPage) {
+    getHomeBottomList({'page': currentPage}).then((resp) {
+      Map<String, dynamic> jsonData = json.decode(resp.toString());
+      if (jsonData['code'] == '0') {
+        this.setState(() {
+          hotGoodsList= jsonData['data'];
+        });
+      }
+    });
   }
 
   @override
@@ -114,9 +126,11 @@ class _HomePageState extends State<HomePage>
         ),
         title: Search(),
       ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
+      body: EasyRefresh(
+        key: _easyRefreshKey,
+        refreshHeader: BallPulseHeader(key: _headerKey, color: Colors.pink),
+        refreshFooter: BallPulseFooter(key: _footerKey, color: Colors.pink,),
+        child: ListView(
           children: <Widget>[
             Container(
               height: 338,
@@ -157,7 +171,7 @@ class _HomePageState extends State<HomePage>
             Activity(
               saoma: homePageContent['saoma']['PICTURE_ADDRESS'],
               integralMallPic: homePageContent['integralMallPic']
-                  ['PICTURE_ADDRESS'],
+              ['PICTURE_ADDRESS'],
               newUser: homePageContent['newUser']['PICTURE_ADDRESS'],
             ),
             Recommend(
@@ -170,86 +184,23 @@ class _HomePageState extends State<HomePage>
             FloorTitle(floorPic: homePageContent['floor3Pic'],),
             Floor(floorList: homePageContent['floor3'] ??= [],),
             TitleWidget(title: '火爆专区', assetImage: 'assets/images/fire.png',),
-            _bottomList(),
-            _buildProgressIndicator(),
-          ],
+            HotGoods(hotGoods: hotGoodsList,),
+          ]
         ),
+        onRefresh: () async {
+          getHomeContent({'lon': 115.02932, 'lat': 35.76189});
+          this.setState(() {
+            currentPage = 1;
+          });
+          getHotGoodsList(currentPage);
+        },
+        loadMore: () async {
+          this.setState(() {
+            currentPage++;
+          });
+          loadMoreHotGoods(currentPage);
+        },
       ),
     );
   }
-
-
-  Widget _buildProgressIndicator() {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Center(
-        child: Opacity(
-          opacity: isPerformingRequest ? 1.0 : 0.0,
-          child: SpinKitThreeBounce(
-            color: Colors.pink,
-            size: 20,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _bottomList() {
-    return Container(
-      color: Colors.white,
-      child: Wrap(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: <Widget>[
-                    CachedNetworkImage(
-                      imageUrl:
-                          'http://images.baixingliangfan.cn/compressedPic/20190121103035_1212.jpg',
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                      child: Text(
-                        '林德曼苹果啤酒250ml林德曼苹果啤酒250ml',
-                        style: TextStyle(color: Colors.pink),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text('¥16.00'),
-                        Text('¥17.60'),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: <Widget>[
-                    CachedNetworkImage(
-                      imageUrl:
-                          'http://images.baixingliangfan.cn/compressedPic/20190121103035_1212.jpg',
-                    ),
-                    Text('林德曼苹果啤酒250ml', style: TextStyle(color: Colors.pink)),
-                    Row(
-                      children: <Widget>[
-                        Text('¥16.00'),
-                        Text('¥17.60'),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
 }

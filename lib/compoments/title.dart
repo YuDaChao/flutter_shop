@@ -34,7 +34,7 @@ class TitleWidget extends StatelessWidget {
                       width: 18.0,
                       height: 18.0,
                     ),
-                    Text('$title', style:TextStyle(fontSize: 16.0, color:Color.fromRGBO(132, 134, 137, 1)))
+                    Text('$title', style:TextStyle(fontSize: 14.0, color:Color.fromRGBO(132, 134, 137, 1)))
                   ],
                 ),
               ),
