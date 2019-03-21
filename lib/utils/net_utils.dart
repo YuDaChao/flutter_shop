@@ -5,7 +5,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 Dio dio = new Dio(new BaseOptions(
-  contentType: ContentType.parse("application/x-www-form-urlencoded")
+  contentType: ContentType.parse("application/x-www-form-urlencoded"),
+  baseUrl: "http://test.baixingliangfan.cn/baixing/",
+  connectTimeout: 5000,
+  receiveTimeout: 3000,
 ));
 
 

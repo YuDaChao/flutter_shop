@@ -1,7 +1,7 @@
- const serviceUrl = 'http://test.baixingliangfan.cn/baixing/';
 //const serviceUrl = 'https://easy-mock.com/mock/5c7757b77163345f2e2ecd02/baixingshenghuo/';
 
-const servicePath = {
-  'homePageContent': '${serviceUrl}wxmini/homePageContent', // 首页信息
-  'homePageBelowConten': '${serviceUrl}wxmini/homePageBelowConten' // 首页列表
-};
+class ServicePath {
+  static String homePageContent = 'wxmini/homePageContent'; // 首页信息
+  static String homePageBelowContent = 'wxmini/homePageBelowConten'; // 首页列表
+  static String getCategory = 'wxmini/getCategory'; // 商品分类
+}

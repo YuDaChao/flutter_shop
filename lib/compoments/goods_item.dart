@@ -45,7 +45,7 @@ class GoodsItemState extends State<GoodsItem> {
                   margin: EdgeInsets.only(left: 6.0),
                   child: Text('¥${item["price"]}',
                       style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: 14.0,
                           color: Colors.black38,
                           decoration: TextDecoration.lineThrough,
                       )),
