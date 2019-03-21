@@ -19,6 +19,8 @@ class FloorState extends State<Floor> {
     if (widget.floorList.isEmpty) {
       return Container();
     }
+    int _leftIndex = 0;
+    int _rightIndex = 0;
     return Container(
       margin: GlobalConfig.margin,
       child: Row(
@@ -27,9 +29,17 @@ class FloorState extends State<Floor> {
             flex: 1,
             child: Column(
               children: widget.floorList
-                  .sublist(0, 2)
-                  .map((item) => CachedNetworkImage(imageUrl: item['image']))
-                  .toList(),
+                .sublist(0, 2)
+                .map((item) {
+                  _leftIndex++;
+                  return ClipRRect(
+                    borderRadius: _leftIndex == 1 ?
+                      BorderRadius.only(topLeft: Radius.circular(8.0))
+                    : BorderRadius.only(bottomLeft: Radius.circular(8.0)),
+                    child: CachedNetworkImage(imageUrl: item['image']),
+                  );
+              })
+                .toList(),
             ),
           ),
           Expanded(
@@ -37,7 +47,17 @@ class FloorState extends State<Floor> {
             child: Column(
               children: widget.floorList
                   .sublist(2)
-                  .map((item) => CachedNetworkImage(imageUrl: item['image']))
+                  .map((item) {
+                  _rightIndex++;
+                  return ClipRRect(
+                    borderRadius: _rightIndex == 1 ?
+                    BorderRadius.only(topRight: Radius.circular(8.0))
+                        : (_rightIndex % 2 == 0 ?
+                            BorderRadius.only(bottomRight: Radius.circular(0.0))
+                    :BorderRadius.only(bottomRight: Radius.circular(8.0))),
+                    child: CachedNetworkImage(imageUrl: item['image']),
+                  );
+                })
                   .toList(),
             ),
           ),

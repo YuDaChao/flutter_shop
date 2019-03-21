@@ -19,8 +19,8 @@ class CategoryItemState extends State<CategoryItem> {
     Category category = widget.category;
     int activeIndex = widget.activeIndex;
     return Container(
-      width: 120.0,
-      height: 65.0,
+      width: 110.0,
+      height: 55.0,
       child: InkWell(
         onTap: () {},
         child: Stack(
@@ -29,8 +29,8 @@ class CategoryItemState extends State<CategoryItem> {
             activeIndex == 2 ? Positioned(
               left: 0,
               child: Container(
-                width: 6.0,
-                height: 20.0,
+                width: 4.0,
+                height: 18.0,
                 color: Colors.pink,
               )
             ) : Container(),

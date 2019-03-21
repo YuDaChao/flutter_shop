@@ -19,13 +19,15 @@ class LeftCategoryNavState extends State<LeftCategoryNav> {
   Widget build(BuildContext context) {
     List<Category> categoryList = widget.categoryList;
     return Container(
-      width: 120.0,
-      height: 1000.0,
+      width: 110.0,
       child: ListView.builder(
           itemCount: categoryList.length,
           itemBuilder: (BuildContext context, int index) {
             return CategoryItem(category: categoryList[index], activeIndex: index);
           }
+      ),
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(248, 248, 248, 1.0)
       ),
     );
   }
