@@ -31,3 +31,12 @@ Future getGoodsCategory() async{
     return {};
   }
 }
+
+// 分类商品列表
+Future getCategoryGoodsList(data) async{
+  try {
+    return await NetUtils.post(ServicePath.categoryGoodsList, data: data);
+  } catch(e) {
+    print('接口请求出错: $e');
+  }
+}

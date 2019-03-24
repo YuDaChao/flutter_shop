@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provide/provide.dart';
+import 'dart:convert';
+
+import '../service/api.dart';
+
+import '../provide/child_category.dart';
+import '../provide/category_goods.dart';
 
 import '../model/category.dart';
+import '../model/category_goods.dart';
 
 import './category_item.dart';
 
@@ -19,7 +27,7 @@ class LeftCategoryNavState extends State<LeftCategoryNav> {
   Widget build(BuildContext context) {
     List<Category> categoryList = widget.categoryList;
     return Container(
-      width: 110.0,
+      width: 100.0,
       child: ListView.builder(
           itemCount: categoryList.length,
           itemBuilder: (BuildContext context, int index) {
@@ -47,11 +55,38 @@ class LeftCategoryNavState extends State<LeftCategoryNav> {
   void didUpdateWidget(LeftCategoryNav oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
+    List<Category> categoryList = widget.categoryList;
+    // 初始化右边菜单
+    Provide.value<ChildCategoryProvide>(context)
+        .changeChildCategory(categoryList[0].bxMallSubDto);
+    // 获取分类商品列表
+    String categoryId = categoryList[0].mallCategoryId;
+    Provide.value<ChildCategoryProvide>(context)
+        .changeCategoryId(categoryId);
+    Map<String, dynamic> data = {
+      'categoryId': categoryId,
+      'categorySubId': '',
+      'page':1
+    };
+    getCategoryGoods(data);
   }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+  }
+
+  void getCategoryGoods(data) async{
+    String response = await getCategoryGoodsList(data);
+    Map<String, dynamic> jsonData = json.decode(response.toString());
+    if(jsonData['code'] == '0') {
+      CategoryGoodsModel categoryGoodsModel = CategoryGoodsModel.fromJson({
+        'categoryGoods': jsonData['data']
+      });
+      Provide.value<CategoryGoodsProvide>(context)
+          .changeCategoryGoodsList(categoryGoodsModel.categoryGoods);
+
+    }
   }
 }

@@ -12,7 +12,7 @@ class SwiperView extends StatefulWidget {
 }
 
 class _SwiperState extends State<SwiperView> {
-  
+
   @override
   void initState() {
     super.initState();

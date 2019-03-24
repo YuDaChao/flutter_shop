@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'dart:convert';
@@ -7,6 +5,8 @@ import '../model/category.dart';
 import '../service/api.dart';
 
 import '../compoments/left_category_nav.dart';
+import '../compoments/right_category_nav.dart';
+import '../compoments/right_category_goods.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -26,7 +26,13 @@ class _CategoryPageState extends State<CategoryPage> {
       body: Container(
         child: Row(
           children: <Widget>[
-            LeftCategoryNav(categoryList: categoryList,)
+            LeftCategoryNav(categoryList: categoryList,),
+            Column(
+              children: <Widget>[
+                RightCategoryNav(),
+                RightCategoryGoods()
+              ],
+            )
           ],
         ),
       ),

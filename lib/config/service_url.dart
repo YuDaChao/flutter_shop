@@ -4,4 +4,5 @@ class ServicePath {
   static String homePageContent = 'wxmini/homePageContent'; // 首页信息
   static String homePageBelowContent = 'wxmini/homePageBelowConten'; // 首页列表
   static String getCategory = 'wxmini/getCategory'; // 商品分类
+  static String categoryGoodsList = 'wxmini/getMallGoods'; // 分类商品列表
 }
