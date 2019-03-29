@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
 
@@ -180,9 +181,14 @@ class RightCategoryGoodsState extends State<RightCategoryGoods> {
       CategoryGoodsModel categoryGoodsModel = CategoryGoodsModel.fromJson({
         'categoryGoods': jsonData['data'] ??= []
       });
-      Provide.value<CategoryGoodsProvide>(context)
-          .changeCategoryGoodsList(categoryGoodsModel.categoryGoods);
-
+      if (categoryGoodsModel.categoryGoods.isEmpty) {
+        Fluttertoast.showToast(msg: '没有更多数据');
+      } else {
+        Provide.value<CategoryGoodsProvide>(context)
+            .changeCategoryGoodsList(categoryGoodsModel.categoryGoods);
+      }
+    } else {
+      Fluttertoast.showToast(msg: '数据加载失败');
     }
   }
 }
