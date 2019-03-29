@@ -35,19 +35,25 @@ class CategoryItemState extends State<CategoryItem> {
           onTap: () {
             Provide.value<ChildCategoryProvide>(context)
               .changeChildCategory(category.bxMallSubDto);
+
             Provide.value<ChildCategoryProvide>(context)
                 .changeCategoryId(category.mallCategoryId);
             int childCurrentIndex = childCategory.childCurrentIndex;
+            // 重置子类索引
             if (childCurrentIndex != 0) {
               Provide.value<ChildCategoryProvide>(context)
                 .changeChildCurrentIndex(0);
             }
+            // 重置页码
+            Provide.value<CategoryGoodsProvide>(context)
+              .changeCurrentPage(1);
             // 获取分类商品列表
             Map<String, dynamic> data = {
               'categoryId': category.mallCategoryId,
               'categorySubId': '',
               'page':1
             };
+            // 修改当前父类索引
             if (childCategory.currentIndex != activeIndex) {
               getCategoryGoods(data);
               Provide.value<ChildCategoryProvide>(context)
@@ -111,7 +117,7 @@ class CategoryItemState extends State<CategoryItem> {
     Map<String, dynamic> jsonData = json.decode(response.toString());
     if(jsonData['code'] == '0') {
       CategoryGoodsModel categoryGoodsModel = CategoryGoodsModel.fromJson({
-        'categoryGoods': jsonData['data']
+        'categoryGoods': jsonData['data'] ??= []
       });
       Provide.value<CategoryGoodsProvide>(context)
           .changeCategoryGoodsList(categoryGoodsModel.categoryGoods);

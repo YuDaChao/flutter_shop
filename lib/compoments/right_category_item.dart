@@ -37,13 +37,20 @@ class RightCategoryItemState extends State<RightCategoryItem> {
             if (childCategory.childCurrentIndex != activeIndex) {
               Map<String, dynamic> data = {
                 'categoryId': childCategory.parentCategoryId,
-                'categorySubId': category.mallCategoryId,
+                'categorySubId': category.mallSubId,
                 'page':1
               };
-              print('===================== $data');
+              // 获取数据
               getCategoryGoods(data);
+              // 改变当前子类索引
               Provide.value<ChildCategoryProvide>(context)
-                  .changeChildCurrentIndex(activeIndex);
+                .changeChildCurrentIndex(activeIndex);
+              // 设置子类id
+              Provide.value<ChildCategoryProvide>(context)
+                .changeSubCategoryId(category.mallSubId);
+              // 重置页码
+              Provide.value<CategoryGoodsProvide>(context)
+                .changeCurrentPage(1);
               widget.changeIndex(activeIndex);
             }
           },

@@ -50,6 +50,94 @@ class _HomePageState extends State<HomePage>
   bool get wantKeepAlive => true;
 
   @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Icon(
+          Icons.room,
+          color: Colors.white,
+        ),
+        title: Search(),
+      ),
+      body: EasyRefresh(
+        key: _easyRefreshKey,
+        refreshHeader: BallPulseHeader(key: _headerKey, color: Colors.pink),
+        refreshFooter: BallPulseFooter(key: _footerKey, color: Colors.pink,),
+        child: ListView(
+            children: <Widget>[
+              Container(
+                height: 338,
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      height: 200,
+                      child: SwiperView(slides: slides),
+                    ),
+                    Positioned(
+                      top: 196,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 1.0,
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                            color: Colors.white54,
+                            spreadRadius: 8,
+                            blurRadius: 8,
+                          )
+                        ]),
+                      ),
+                    ),
+                    Positioned(
+                      top: 182,
+                      child: Nav(categories: categories ??= [],),
+                    )
+                  ],
+                ),
+              ),
+              Advertes(
+                imageUrl: advertesPicture['PICTURE_ADDRESS'],
+              ),
+              ShopInfo(
+                leaderImage: shopInfo['leaderImage'],
+                leaderPhone: shopInfo['leaderPhone'],
+              ),
+              Activity(
+                saoma: homePageContent['saoma']['PICTURE_ADDRESS'],
+                integralMallPic: homePageContent['integralMallPic']
+                ['PICTURE_ADDRESS'],
+                newUser: homePageContent['newUser']['PICTURE_ADDRESS'],
+              ),
+              Recommend(
+                recommendList: homePageContent['recommend'] ??= [],
+              ),
+              FloorTitle(floorPic: homePageContent['floor1Pic'],),
+              Floor(floorList: homePageContent['floor1'] ??= [],),
+              FloorTitle(floorPic: homePageContent['floor2Pic'],),
+              Floor(floorList: homePageContent['floor2'] ??= [],),
+              FloorTitle(floorPic: homePageContent['floor3Pic'],),
+              Floor(floorList: homePageContent['floor3'] ??= [],),
+              TitleWidget(title: '火爆专区', assetImage: 'assets/images/fire.png',),
+              HotGoods(hotGoods: hotGoodsList,),
+            ]
+        ),
+        onRefresh: () async {
+          getHomeContent({'lon': 115.02932, 'lat': 35.76189});
+          this.setState(() {
+            currentPage = 1;
+          });
+          getHotGoodsList(currentPage);
+        },
+        loadMore: () async {
+          this.setState(() {
+            currentPage++;
+          });
+          loadMoreHotGoods(currentPage);
+        },
+      ),
+    );
+  }
+
+  @override
   void initState() {
     super.initState();
 
@@ -114,93 +202,5 @@ class _HomePageState extends State<HomePage>
         });
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Icon(
-          Icons.room,
-          color: Colors.white,
-        ),
-        title: Search(),
-      ),
-      body: EasyRefresh(
-        key: _easyRefreshKey,
-        refreshHeader: BallPulseHeader(key: _headerKey, color: Colors.pink),
-        refreshFooter: BallPulseFooter(key: _footerKey, color: Colors.pink,),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              height: 338,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    height: 200,
-                    child: SwiperView(slides: slides),
-                  ),
-                  Positioned(
-                    top: 196,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 1.0,
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                          color: Colors.white54,
-                          spreadRadius: 8,
-                          blurRadius: 8,
-                        )
-                      ]),
-                    ),
-                  ),
-                  Positioned(
-                    top: 182,
-                    child: Nav(categories: categories ??= [],),
-                  )
-                ],
-              ),
-            ),
-            Advertes(
-              imageUrl: advertesPicture['PICTURE_ADDRESS'],
-            ),
-            ShopInfo(
-              leaderImage: shopInfo['leaderImage'],
-              leaderPhone: shopInfo['leaderPhone'],
-            ),
-            Activity(
-              saoma: homePageContent['saoma']['PICTURE_ADDRESS'],
-              integralMallPic: homePageContent['integralMallPic']
-              ['PICTURE_ADDRESS'],
-              newUser: homePageContent['newUser']['PICTURE_ADDRESS'],
-            ),
-            Recommend(
-              recommendList: homePageContent['recommend'] ??= [],
-            ),
-            FloorTitle(floorPic: homePageContent['floor1Pic'],),
-            Floor(floorList: homePageContent['floor1'] ??= [],),
-            FloorTitle(floorPic: homePageContent['floor2Pic'],),
-            Floor(floorList: homePageContent['floor2'] ??= [],),
-            FloorTitle(floorPic: homePageContent['floor3Pic'],),
-            Floor(floorList: homePageContent['floor3'] ??= [],),
-            TitleWidget(title: '火爆专区', assetImage: 'assets/images/fire.png',),
-            HotGoods(hotGoods: hotGoodsList,),
-          ]
-        ),
-        onRefresh: () async {
-          getHomeContent({'lon': 115.02932, 'lat': 35.76189});
-          this.setState(() {
-            currentPage = 1;
-          });
-          getHotGoodsList(currentPage);
-        },
-        loadMore: () async {
-          this.setState(() {
-            currentPage++;
-          });
-          loadMoreHotGoods(currentPage);
-        },
-      ),
-    );
   }
 }
