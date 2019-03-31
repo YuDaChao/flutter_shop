@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config/global_config.dart';
+
 class TitleWidget extends StatelessWidget {
   final String title;
   final String assetImage;
@@ -22,7 +24,7 @@ class TitleWidget extends StatelessWidget {
           Align(
             alignment: FractionalOffset.center,
             child: Container(
-              color: Color.fromRGBO(239, 239, 239, 1.0),
+              color: GlobalConfig.bgColor,
               padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
               child: Container(
                 width: 90,

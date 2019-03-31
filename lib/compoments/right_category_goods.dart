@@ -44,9 +44,9 @@ class RightCategoryGoodsState extends State<RightCategoryGoods> {
 //    );
     return Provide<CategoryGoodsProvide>(
       builder: (context, child, categoryGoodsProvide) => Container(
-        width: 267,
-        height: 563.0,
-        margin: EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 0.0),
+        width: MediaQuery.of(context).size.width - 100.0,
+        height: MediaQuery.of(context).size.height - 191.0,
+        padding: EdgeInsets.all(8.0),
         color: Colors.white,
         child: EasyRefresh(
           key: _easyRefreshKey,
@@ -170,7 +170,6 @@ class RightCategoryGoodsState extends State<RightCategoryGoods> {
       'categorySubId': Provide.value<ChildCategoryProvide>(context).subCategoryId,
       'page': currentPage
     };
-    print('------ $data');
     getCategoryGoods(data);
   }
 
@@ -182,13 +181,22 @@ class RightCategoryGoodsState extends State<RightCategoryGoods> {
         'categoryGoods': jsonData['data'] ??= []
       });
       if (categoryGoodsModel.categoryGoods.isEmpty) {
-        Fluttertoast.showToast(msg: '没有更多数据');
+        Fluttertoast.showToast(
+          msg: '没有更多数据',
+          gravity: ToastGravity.CENTER
+        );
       } else {
+        List<CategoryGoods> categoryGoods =
+          Provide.value<CategoryGoodsProvide>(context).categoryGoodsList;
+        categoryGoods.addAll(categoryGoodsModel.categoryGoods);
         Provide.value<CategoryGoodsProvide>(context)
-            .changeCategoryGoodsList(categoryGoodsModel.categoryGoods);
+            .changeCategoryGoodsList(categoryGoods);
       }
     } else {
-      Fluttertoast.showToast(msg: '数据加载失败');
+      Fluttertoast.showToast(
+        msg: '数据加载失败',
+        gravity: ToastGravity.CENTER
+      );
     }
   }
 }

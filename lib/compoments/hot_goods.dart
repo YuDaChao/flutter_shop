@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../config/global_config.dart';
 
 import 'goods_item.dart';
 
